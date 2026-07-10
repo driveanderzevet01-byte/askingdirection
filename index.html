@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#2F6F4E">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Direction Quest: The Lost Traveler</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- ============ LOADING SCREEN ============ -->
+  <div id="loadingScreen" class="screen">
+    <div class="loading-wrap">
+      <div class="loading-compass">
+        <svg viewBox="0 0 100 100" width="72" height="72">
+          <circle cx="50" cy="50" r="44" fill="none" stroke="#E8A33D" stroke-width="3"/>
+          <polygon points="50,14 58,50 50,86 42,50" fill="#C1503E"/>
+          <polygon points="14,50 50,42 86,50 50,58" fill="#2F6F4E"/>
+        </svg>
+      </div>
+      <h1>Direction Quest</h1>
+      <p class="subtitle">The Lost Traveler</p>
+      <div class="loading-bar-track"><div id="loadingBarFill" class="loading-bar-fill"></div></div>
+      <p id="loadingLabel" class="loading-label">Unfolding the map…</p>
+    </div>
+  </div>
+
+  <!-- ============ MAIN MENU ============ -->
+  <div id="mainMenu" class="screen hidden">
+    <div class="menu-card">
+      <div class="menu-header">
+        <svg viewBox="0 0 100 100" width="48" height="48">
+          <circle cx="50" cy="50" r="44" fill="none" stroke="#E8A33D" stroke-width="3"/>
+          <polygon points="50,14 58,50 50,86 42,50" fill="#C1503E"/>
+          <polygon points="14,50 50,42 86,50 50,58" fill="#2F6F4E"/>
+        </svg>
+        <div>
+          <h1>Direction Quest</h1>
+          <p class="subtitle">The Lost Traveler — Learn to Give &amp; Follow Directions</p>
+        </div>
+      </div>
+
+      <form id="playerForm" class="player-form">
+        <label>Your name
+          <input type="text" id="inputName" placeholder="e.g. Dani" autocomplete="off" required>
+        </label>
+        <div class="menu-buttons">
+          <button type="submit" class="btn btn-primary">Start New Journey</button>
+          <button type="button" id="btnContinue" class="btn btn-secondary" disabled>Continue Saved Journey</button>
+          <button type="button" id="btnHowTo" class="btn btn-ghost">How to Play</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ============ HOW TO PLAY ============ -->
+  <div id="howToScreen" class="screen hidden">
+    <div class="menu-card howto-card">
+      <h2>How to Play</h2>
+      <ul class="howto-list">
+        <li><strong>Move:</strong> WASD or Arrow Keys, drag the on-screen joystick on phones, or just click/tap anywhere on the ground to walk there. Hold <strong>Shift</strong> (or push the joystick further) to run.</li>
+        <li><strong>Talk:</strong> Walk up to a townsperson (glowing ring) and press <strong>E</strong>, tap the Talk button, or click/tap them directly.</li>
+        <li><strong>Listen:</strong> Townspeople will give you directions in English. Read carefully!</li>
+        <li><strong>Prove it:</strong> Answer a quick challenge about the directions you were given.</li>
+        <li><strong>Travel:</strong> Follow the directions to the marked destination on your mini-map.</li>
+        <li><strong>Journal:</strong> Press <strong>J</strong> anytime to see your quest log.</li>
+        <li><strong>Pause:</strong> Press <strong>Esc</strong> to pause, save, or adjust volume.</li>
+      </ul>
+      <button id="btnHowToBack" class="btn btn-primary">Got it</button>
+    </div>
+  </div>
+
+  <!-- ============ GAME ROOT ============ -->
+  <div id="gameRoot" class="hidden">
+    <canvas id="gameCanvas"></canvas>
+
+    <!-- ---- HUD ---- -->
+    <div id="hud" class="hud">
+      <div class="hud-left">
+        <div class="level-badge"><span id="hudLevel">1</span></div>
+        <div class="xp-wrap">
+          <div class="xp-bar-track"><div id="xpBarFill" class="xp-bar-fill"></div></div>
+          <span id="hudXpLabel" class="xp-label">0 / 100 XP</span>
+        </div>
+      </div>
+      <div class="hud-center" id="questTracker">
+        <span class="quest-eyebrow">Current Quest</span>
+        <span id="questTrackerText">Talk to a townsperson to begin</span>
+      </div>
+      <div class="hud-right">
+        <div class="coin-pill">🪙 <span id="hudCoins">0</span></div>
+        <div class="clock-pill">🕐 <span id="hudClock">Morning</span></div>
+        <button id="btnMute" class="icon-btn" title="Mute">🔊</button>
+        <button id="btnFullscreen" class="icon-btn fullscreen-btn" title="Fullscreen">⛶</button>
+        <button id="btnJournal" class="icon-btn" title="Quest Journal (J)">📖</button>
+        <button id="btnPause" class="icon-btn" title="Pause (Esc)">⏸</button>
+      </div>
+    </div>
+
+    <!-- ---- Mini-map ---- -->
+    <div class="minimap-wrap">
+      <canvas id="minimapCanvas" width="150" height="150"></canvas>
+      <span class="minimap-label">Riverside District</span>
+    </div>
+
+    <!-- ---- Interaction prompt ---- -->
+    <div id="interactPrompt" class="interact-prompt hidden">Press <kbd>E</kbd> to talk</div>
+
+    <!-- ---- Touch/mobile controls (shown only on touch-capable devices) ---- -->
+    <div id="mobileControls" class="mobile-controls hidden">
+      <div id="joystickBase" class="joystick-base">
+        <div id="joystickKnob" class="joystick-knob"></div>
+      </div>
+      <button id="btnTouchInteract" class="touch-action-btn">
+        <span class="ta-icon">💬</span><span class="ta-label">Talk</span>
+      </button>
+    </div>
+    <div id="rotateHint" class="rotate-hint hidden">
+      🔄 For the best view, try rotating your device to landscape.
+      <button id="rotateHintClose" class="rotate-hint-close">✕</button>
+    </div>
+
+    <!-- ---- Notifications ---- -->
+    <div id="notifyStack" class="notify-stack"></div>
+
+    <!-- ---- Dialogue box ---- -->
+    <div id="dialogueBox" class="dialogue-box hidden">
+      <div class="dialogue-portrait" id="dlgPortrait">?</div>
+      <div class="dialogue-main">
+        <div class="dialogue-name" id="dlgName">Townsperson</div>
+        <div class="dialogue-text" id="dlgText"></div>
+        <div class="dialogue-choices" id="dlgChoices"></div>
+      </div>
+      <button id="dlgSkip" class="dlg-skip" title="Skip typing">⏭</button>
+    </div>
+
+    <!-- ---- Challenge modal (minigames) ---- -->
+    <div id="challengeModal" class="modal-overlay hidden">
+      <div class="challenge-card" id="challengeCard"></div>
+    </div>
+
+    <!-- ---- Quest Journal ---- -->
+
+    <div id="journalModal" class="modal-overlay hidden">
+      <div class="journal-card">
+        <div class="journal-header">
+          <h2>Quest Journal</h2>
+          <button class="icon-btn" id="btnJournalClose">✕</button>
+        </div>
+        <div id="journalList" class="journal-list"></div>
+      </div>
+    </div>
+
+    <!-- ---- Pause menu ---- -->
+    <div id="pauseModal" class="modal-overlay hidden">
+      <div class="menu-card">
+        <h2>Paused</h2>
+        <div class="settings-row">
+          <label for="volumeSlider">Volume</label>
+          <input type="range" id="volumeSlider" min="0" max="100" value="70">
+        </div>
+        <div class="menu-buttons">
+          <button id="btnResume" class="btn btn-primary">Resume</button>
+          <button id="btnSaveNow" class="btn btn-secondary">Save Progress</button>
+          <button id="btnQuitMenu" class="btn btn-ghost">Quit to Main Menu</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ---- Final instruction (shown on arrival at the Library) ---- -->
+    <div id="finalInstructionModal" class="modal-overlay hidden">
+      <div class="menu-card final-instruction-card">
+        <div class="final-instruction-badge">🎉</div>
+        <h2>You Made It!</h2>
+        <p class="final-instruction-text">Bring all your stuff and go to a place at JIU where you can find so many books, print your assignments, and find one beautiful staff and ask for your reward by saying <strong>&quot;cheese&quot;</strong>.</p>
+        <div class="menu-buttons">
+          <button id="btnFinalInstructionClose" class="btn btn-primary">Got it!</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ---- Achievement / level-up toast root reused by notifyStack ---- -->
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

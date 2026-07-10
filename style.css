@@ -1,0 +1,373 @@
+@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Inter:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap');
+
+/* ============================================================
+   DESIGN TOKENS
+   Theme: "Illustrated Travel Journal" — warm paper world map,
+   carved wooden signage, ink-and-watercolor palette.
+   ============================================================ */
+:root{
+  --paper:      #FBF3E3;
+  --paper-dark: #EFE2C6;
+  --ink:        #24312B;
+  --ink-soft:   #56645A;
+  --leaf:       #2F6F4E;
+  --leaf-dark:  #1F4E36;
+  --marigold:   #E8A33D;
+  --marigold-dk:#C9822A;
+  --brick:      #C1503E;
+  --water:      #4A90A4;
+  --water-dk:   #366E7E;
+  --success:    #5B8C5A;
+  --stone:      #C9BBA2;
+
+  --font-display: 'Fredoka', sans-serif;
+  --font-body:    'Inter', sans-serif;
+  --font-mono:    'Space Mono', monospace;
+
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 22px;
+  --shadow-card: 0 10px 30px rgba(36,49,43,0.18);
+}
+
+*{ box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html,body{
+  margin:0; padding:0; width:100%; height:100%; overflow:hidden;
+  font-family: var(--font-body);
+  background: var(--ink);
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+  overscroll-behavior: none;
+  touch-action: manipulation;
+}
+.hidden{ display:none !important; }
+button{ font-family: inherit; cursor:pointer; }
+input{ font-family: inherit; }
+
+/* ============================================================
+   SCREENS (loading / menu / how-to)
+   ============================================================ */
+.screen{
+  position:fixed; inset:0; display:flex; align-items:center; justify-content:center;
+  background:
+    radial-gradient(ellipse at 30% 20%, rgba(232,163,61,0.20), transparent 55%),
+    radial-gradient(ellipse at 80% 80%, rgba(74,144,164,0.18), transparent 55%),
+    var(--paper);
+  z-index: 50;
+  animation: screenFade .5s ease both;
+}
+@keyframes screenFade{ from{opacity:0} to{opacity:1} }
+
+.loading-wrap{ text-align:center; }
+.loading-compass{ animation: spinCompass 3s linear infinite; margin-bottom: 6px; }
+@keyframes spinCompass{ from{transform:rotate(0)} to{transform:rotate(360deg)} }
+
+h1{ font-family: var(--font-display); font-weight:700; font-size: 2.1rem; color: var(--leaf-dark); margin: 4px 0 0; letter-spacing: -0.01em; }
+.subtitle{ font-family: var(--font-body); color: var(--ink-soft); margin: 2px 0 18px; font-size: .95rem; }
+
+.loading-bar-track{ width: 260px; height: 10px; border-radius: 99px; background: var(--paper-dark); overflow:hidden; margin: 0 auto; border: 1px solid rgba(36,49,43,0.12); }
+.loading-bar-fill{ height:100%; width:0%; background: linear-gradient(90deg, var(--marigold), var(--brick)); transition: width .3s ease; }
+.loading-label{ font-family: var(--font-mono); font-size: .78rem; color: var(--ink-soft); margin-top:10px; }
+
+.menu-card{
+  background: var(--paper);
+  border: 1px solid rgba(36,49,43,0.10);
+  box-shadow: var(--shadow-card);
+  border-radius: var(--radius-lg);
+  padding: 34px 38px;
+  width: min(420px, 90vw);
+  position: relative;
+}
+.menu-card::before{
+  content:""; position:absolute; inset:8px; border: 1.5px dashed rgba(232,163,61,0.45);
+  border-radius: calc(var(--radius-lg) - 6px); pointer-events:none;
+}
+.menu-header{ display:flex; align-items:center; gap:14px; margin-bottom: 22px; }
+.menu-header h1{ font-size: 1.5rem; margin:0; }
+.menu-header .subtitle{ margin:2px 0 0; font-size:.82rem; }
+
+.player-form label{ display:block; font-family: var(--font-mono); font-size:.72rem; text-transform: uppercase; letter-spacing:.06em; color: var(--ink-soft); margin: 14px 0 6px; }
+.player-form .optional{ text-transform:none; opacity:.6; }
+.player-form input{
+  width:100%; padding: 11px 13px; border-radius: var(--radius-sm); border: 1.5px solid var(--stone);
+  background: #fff; font-size: .95rem; color: var(--ink); outline:none; transition: border-color .15s;
+}
+.player-form input:focus{ border-color: var(--marigold); }
+
+.menu-buttons{ display:flex; flex-direction:column; gap:10px; margin-top:22px; }
+.btn{ border:none; border-radius: var(--radius-sm); padding: 12px 18px; font-weight:600; font-size:.92rem; transition: transform .12s ease, box-shadow .12s ease, filter .12s ease; }
+.btn:active{ transform: scale(.97); }
+.btn-primary{ background: var(--leaf); color:#fff; box-shadow: 0 4px 0 var(--leaf-dark); }
+.btn-primary:hover{ filter: brightness(1.06); }
+.btn-secondary{ background: var(--marigold); color: #3a2508; box-shadow: 0 4px 0 var(--marigold-dk); }
+.btn-secondary:disabled{ opacity:.45; cursor:not-allowed; box-shadow:none; }
+.btn-ghost{ background: transparent; color: var(--ink-soft); border: 1.5px solid var(--stone); }
+.btn-ghost:hover{ background: var(--paper-dark); }
+
+.howto-card{ width:min(480px,90vw); }
+.howto-list{ list-style:none; padding:0; margin: 6px 0 22px; display:flex; flex-direction:column; gap:10px; }
+.howto-list li{ font-size:.88rem; line-height:1.4; color: var(--ink); background: var(--paper-dark); padding:10px 12px; border-radius: var(--radius-sm); }
+.howto-list kbd, .howto-list strong{ color: var(--leaf-dark); }
+
+/* ============================================================
+   GAME ROOT / CANVAS
+   ============================================================ */
+#gameRoot{ position:fixed; inset:0; background: var(--ink); }
+#gameCanvas{ position:absolute; inset:0; width:100%; height:100%; display:block; touch-action: none; }
+
+/* ============================================================
+   HUD
+   ============================================================ */
+.hud{
+  position:fixed; top:0; left:0; right:0; z-index:20;
+  display:flex; align-items:center; justify-content:space-between;
+  padding: 14px 20px; pointer-events:none;
+}
+.hud > *{ pointer-events:auto; }
+.hud-left{ display:flex; align-items:center; gap:10px; background: rgba(251,243,227,0.92); padding:8px 14px 8px 8px; border-radius: 99px; box-shadow: var(--shadow-card); }
+.level-badge{ width:34px; height:34px; border-radius:50%; background: var(--leaf); color:#fff; display:flex; align-items:center; justify-content:center; font-family: var(--font-display); font-weight:700; font-size:.95rem; box-shadow: inset 0 -3px 0 rgba(0,0,0,0.15); }
+.xp-wrap{ display:flex; flex-direction:column; gap:3px; }
+.xp-bar-track{ width:120px; height:8px; border-radius:99px; background: var(--paper-dark); overflow:hidden; }
+.xp-bar-fill{ height:100%; width:0%; background: linear-gradient(90deg, var(--marigold), var(--brick)); transition: width .4s ease; }
+.xp-label{ font-family: var(--font-mono); font-size:.65rem; color: var(--ink-soft); }
+
+.hud-center{
+  background: rgba(251,243,227,0.92); border-radius: var(--radius-md); padding: 8px 20px;
+  box-shadow: var(--shadow-card); display:flex; flex-direction:column; align-items:center; min-width: 260px; text-align:center;
+}
+.quest-eyebrow{ font-family: var(--font-mono); font-size:.62rem; letter-spacing:.08em; text-transform:uppercase; color: var(--marigold-dk); }
+#questTrackerText{ font-size:.86rem; font-weight:600; color: var(--ink); }
+
+.hud-right{ display:flex; align-items:center; gap:8px; }
+.coin-pill, .clock-pill{ background: rgba(251,243,227,0.92); border-radius:99px; padding:7px 12px; font-family: var(--font-mono); font-size:.78rem; box-shadow: var(--shadow-card); }
+.icon-btn{ width:36px; height:36px; border-radius:50%; border:none; background: rgba(251,243,227,0.92); box-shadow: var(--shadow-card); font-size:1rem; display:flex; align-items:center; justify-content:center; transition: transform .12s; }
+.icon-btn:hover{ transform: scale(1.08); }
+
+/* ============================================================
+   MINI MAP
+   ============================================================ */
+.minimap-wrap{
+  position:fixed; bottom:18px; right:18px; z-index:20; background: rgba(251,243,227,0.92);
+  border-radius: var(--radius-md); padding:8px; box-shadow: var(--shadow-card); text-align:center;
+}
+#minimapCanvas{ border-radius: var(--radius-sm); display:block; }
+.minimap-label{ font-family: var(--font-mono); font-size:.6rem; color: var(--ink-soft); }
+
+/* ============================================================
+   INTERACTION PROMPT
+   ============================================================ */
+.interact-prompt{
+  position:fixed; left:50%; bottom:120px; transform: translateX(-50%); z-index:20;
+  background: var(--ink); color: var(--paper); padding: 8px 16px; border-radius: 99px;
+  font-size:.82rem; font-weight:600; animation: bobPrompt 1.2s ease-in-out infinite;
+}
+@keyframes bobPrompt{ 0%,100%{ transform: translateX(-50%) translateY(0);} 50%{ transform: translateX(-50%) translateY(-6px);} }
+.interact-prompt kbd{ background: var(--marigold); color:#3a2508; padding:1px 7px; border-radius:5px; font-family: var(--font-mono); }
+
+/* ============================================================
+   NOTIFICATIONS / TOASTS
+   ============================================================ */
+.notify-stack{ position:fixed; top:80px; right:20px; z-index:40; display:flex; flex-direction:column; gap:8px; align-items:flex-end; }
+.toast{
+  background: var(--paper); border-left: 5px solid var(--marigold); border-radius: var(--radius-sm);
+  padding: 10px 16px; box-shadow: var(--shadow-card); font-size:.85rem; min-width: 200px;
+  animation: toastIn .35s ease both;
+}
+.toast.success{ border-left-color: var(--success); }
+.toast.levelup{ border-left-color: var(--brick); }
+.toast b{ display:block; font-family: var(--font-display); font-size:.82rem; color: var(--ink); }
+@keyframes toastIn{ from{ opacity:0; transform: translateX(30px);} to{ opacity:1; transform:translateX(0);} }
+.toast.leaving{ animation: toastOut .3s ease forwards; }
+@keyframes toastOut{ to{ opacity:0; transform: translateX(30px) scale(.95);} }
+
+/* ============================================================
+   DIALOGUE BOX
+   ============================================================ */
+.dialogue-box{
+  position:fixed; left:50%; bottom:26px; transform: translateX(-50%);
+  width:min(760px, 92vw); background: var(--paper); border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card); display:flex; gap:16px; padding: 18px 20px; z-index: 30;
+  border: 1px solid rgba(36,49,43,0.08);
+  animation: dlgIn .28s cubic-bezier(.2,.9,.3,1.2) both;
+}
+@keyframes dlgIn{ from{ opacity:0; transform: translateX(-50%) translateY(24px);} to{ opacity:1; transform: translateX(-50%) translateY(0);} }
+.dialogue-portrait{
+  flex-shrink:0; width:56px; height:56px; border-radius:50%; background: var(--leaf); color:#fff;
+  display:flex; align-items:center; justify-content:center; font-family: var(--font-display); font-weight:700; font-size:1.2rem;
+  box-shadow: inset 0 -4px 0 rgba(0,0,0,0.18);
+}
+.dialogue-main{ flex:1; min-width:0; }
+.dialogue-name{ font-family: var(--font-display); font-weight:600; color: var(--leaf-dark); font-size:.95rem; margin-bottom:4px; }
+.dialogue-text{ font-size:.92rem; line-height:1.5; min-height: 2.8em; color: var(--ink); }
+.dialogue-text .cursor{ display:inline-block; width:2px; background: var(--ink); animation: blinkCursor .8s steps(1) infinite; margin-left:1px; }
+@keyframes blinkCursor{ 50%{ opacity:0; } }
+.dialogue-choices{ display:flex; flex-wrap:wrap; gap:8px; margin-top:12px; }
+.dialogue-choices button{
+  background: var(--paper-dark); border: 1.5px solid var(--stone); border-radius: var(--radius-sm);
+  padding: 8px 14px; font-size:.82rem; font-weight:600; color: var(--ink); transition: all .12s;
+}
+.dialogue-choices button:hover{ background: var(--marigold); border-color: var(--marigold-dk); }
+.dlg-skip{ align-self:flex-start; background:none; border:none; font-size:1rem; color: var(--ink-soft); }
+
+/* ============================================================
+   MODALS (challenge / journal / pause)
+   ============================================================ */
+.modal-overlay{
+  position:fixed; inset:0; background: rgba(36,49,43,0.55); z-index: 60;
+  display:flex; align-items:flex-start; justify-content:center;
+  overflow-y:auto; -webkit-overflow-scrolling:touch;
+  padding: max(24px, env(safe-area-inset-top)) 14px max(24px, env(safe-area-inset-bottom));
+  animation: screenFade .2s ease both;
+  backdrop-filter: blur(2px);
+}
+.challenge-card, .journal-card{
+  background: var(--paper); border-radius: var(--radius-lg); box-shadow: var(--shadow-card);
+  padding: 26px 28px; width: min(560px, 92vw);
+  margin: auto; /* centers when content is short; overlay scrolls when it isn't */
+  animation: cardIn .25s ease both;
+}
+@keyframes cardIn{ from{ opacity:0; transform: translateY(24px);} to{ opacity:1; transform: translateY(0);} }
+.challenge-card h2, .journal-card h2{ font-family: var(--font-display); color: var(--leaf-dark); margin: 0 0 6px; font-size: 1.3rem; }
+.challenge-sub{ font-family: var(--font-mono); font-size:.72rem; color: var(--marigold-dk); text-transform: uppercase; letter-spacing:.06em; margin-bottom: 14px; }
+.challenge-prompt{ font-size: .95rem; line-height:1.5; margin-bottom: 18px; background: var(--paper-dark); padding: 12px 14px; border-radius: var(--radius-sm); }
+
+.mc-options{ display:flex; flex-direction:column; gap:9px; }
+.mc-option{
+  text-align:left; background:#fff; border: 1.5px solid var(--stone); border-radius: var(--radius-sm);
+  padding: 11px 14px; font-size:.88rem; transition: all .12s;
+}
+.mc-option:hover{ border-color: var(--marigold); background: var(--paper-dark); }
+.mc-option.correct{ background: var(--success); border-color: var(--success); color:#fff; animation: pulseGood .4s ease; }
+.mc-option.wrong{ background: var(--brick); border-color: var(--brick); color:#fff; animation: shakeBad .4s ease; }
+.drag-item{ user-select:none; }
+.drag-item.dragging{ opacity: 0.4; border-style: dashed; }
+@keyframes pulseGood{ 0%{transform:scale(1)} 40%{transform:scale(1.03)} 100%{transform:scale(1)} }
+@keyframes shakeBad{ 0%,100%{transform:translateX(0)} 25%{transform:translateX(-6px)} 75%{transform:translateX(6px)} }
+
+.typing-textarea{
+  width:100%; min-height: 84px; border-radius: var(--radius-sm); border: 1.5px solid var(--stone);
+  padding: 12px; font-size: .92rem; font-family: var(--font-body); resize: vertical; outline:none;
+}
+.typing-textarea:focus{ border-color: var(--marigold); }
+.typing-stats{ display:flex; gap:14px; margin-top:10px; font-family: var(--font-mono); font-size:.72rem; color: var(--ink-soft); flex-wrap:wrap; }
+.challenge-actions{ display:flex; justify-content:flex-end; gap:10px; margin-top:18px; }
+.hint-btn{ background:none; border:none; color: var(--marigold-dk); font-size:.78rem; text-decoration: underline; margin-top:6px; }
+
+.result-banner{ text-align:center; padding: 16px; border-radius: var(--radius-sm); margin-bottom:14px; font-family: var(--font-display); font-size:1.1rem; }
+.result-banner.pass{ background: rgba(91,140,90,0.15); color: var(--success); }
+.result-banner.fail{ background: rgba(193,80,62,0.15); color: var(--brick); }
+
+.journal-header{ display:flex; justify-content:space-between; align-items:center; margin-bottom: 14px; }
+.journal-list{ display:flex; flex-direction:column; gap:10px; }
+.journal-item{ background: var(--paper-dark); border-radius: var(--radius-sm); padding: 12px 14px; border-left: 5px solid var(--stone); }
+.journal-item.active{ border-left-color: var(--marigold); }
+.journal-item.done{ border-left-color: var(--success); opacity:.75; }
+.journal-item .jq-title{ font-weight:700; font-size:.88rem; margin-bottom:2px; }
+.journal-item .jq-desc{ font-size:.78rem; color: var(--ink-soft); }
+.journal-item .jq-status{ font-family: var(--font-mono); font-size:.65rem; text-transform:uppercase; letter-spacing:.05em; margin-top:4px; display:inline-block; }
+
+.settings-row{ display:flex; align-items:center; gap:12px; margin: 16px 0; font-size:.85rem; }
+.settings-row input[type=range]{ flex:1; accent-color: var(--marigold); }
+
+.final-instruction-card{ text-align:center; }
+.final-instruction-badge{ font-size:2.4rem; margin-bottom:4px; }
+.final-instruction-text{
+  font-size:.95rem; line-height:1.6; color: var(--ink); text-align:left;
+  background: var(--paper-dark); border-left: 4px solid var(--marigold);
+  padding: 14px 16px; border-radius: var(--radius-sm); margin: 12px 0 4px;
+}
+
+/* Scrollbars in modals */
+.challenge-card::-webkit-scrollbar, .journal-card::-webkit-scrollbar{ width:8px; }
+.challenge-card::-webkit-scrollbar-thumb, .journal-card::-webkit-scrollbar-thumb{ background: var(--stone); border-radius: 99px; }
+
+/* ============================================================
+   MOBILE / TOUCH CONTROLS
+   Shown only when the device is touch-capable (JS adds
+   .touch-device to <body>). Hidden automatically while any
+   dialogue/modal is open, via :has() below.
+   ============================================================ */
+.mobile-controls{ display:none; }
+body.touch-device .mobile-controls{ display:block; }
+
+.joystick-base{
+  position:fixed; left: max(22px, env(safe-area-inset-left)); bottom: max(26px, env(safe-area-inset-bottom));
+  width:112px; height:112px; border-radius:50%; z-index:25;
+  background: rgba(251,243,227,0.35); border: 2px solid rgba(251,243,227,0.6);
+  touch-action: none; backdrop-filter: blur(1px);
+}
+.joystick-knob{
+  position:absolute; top:50%; left:50%; width:52px; height:52px; border-radius:50%;
+  background: rgba(232,163,61,0.92); box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+  transform: translate(-50%,-50%);
+  transition: transform .06s linear;
+}
+/* JS sets the full inline transform each frame: translate(-50%,-50%) translate(dx,dy) */
+
+.touch-action-btn{
+  position:fixed; right: max(22px, env(safe-area-inset-right)); bottom: max(30px, env(safe-area-inset-bottom));
+  width:78px; height:78px; border-radius:50%; z-index:25; border:none;
+  background: rgba(193,80,62,0.92); color:#fff; box-shadow: var(--shadow-card);
+  display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2px;
+  touch-action: manipulation;
+}
+.touch-action-btn .ta-icon{ font-size:1.3rem; }
+.touch-action-btn .ta-label{ font-family: var(--font-mono); font-size:.6rem; text-transform:uppercase; }
+.touch-action-btn:active{ transform: scale(.93); }
+
+.fullscreen-btn{ display:none; }
+body.touch-device .fullscreen-btn{ display:flex; }
+
+.rotate-hint{
+  position:fixed; top: max(64px, env(safe-area-inset-top) + 50px); left:50%; transform: translateX(-50%); z-index:45;
+  background: var(--ink); color: var(--paper); padding: 8px 14px; border-radius: 99px; font-size:.76rem;
+  display:flex; align-items:center; gap:10px; box-shadow: var(--shadow-card); max-width: 90vw;
+}
+.rotate-hint-close{ background:none; border:none; color: var(--paper); opacity:.7; font-size:.8rem; }
+
+/* Hide/dim touch controls while any dialogue or modal is open so they don't overlap taps */
+#gameRoot:has(#dialogueBox:not(.hidden)) .mobile-controls,
+#gameRoot:has(.modal-overlay:not(.hidden)) .mobile-controls{
+  opacity: 0.12; pointer-events: none; transition: opacity .2s ease;
+}
+
+/* Larger tap targets on coarse-pointer (touch) devices */
+@media (pointer: coarse){
+  .icon-btn{ width:42px; height:42px; font-size:1.1rem; }
+  .mc-option, .dialogue-choices button, .btn{ min-height:44px; }
+}
+
+
+@media (max-width: 640px){
+  .hud{ flex-wrap:wrap; gap:8px; padding: max(10px, env(safe-area-inset-top)) 10px 10px; }
+  .hud-center{ order:3; width:100%; min-width:0; }
+  .minimap-wrap{ transform: scale(0.72); transform-origin: bottom right; bottom: max(8px, env(safe-area-inset-bottom)); right:8px; }
+  .dialogue-box{ flex-direction:column; align-items:center; text-align:center; bottom: max(150px, env(safe-area-inset-bottom) + 140px); width: min(94vw, 480px); }
+  .dialogue-portrait{ width:44px; height:44px; }
+  .interact-prompt{ bottom: max(150px, env(safe-area-inset-bottom) + 140px); }
+  .journal-card, .challenge-card{ width: 94vw; padding: 18px; }
+  .challenge-card h2, .journal-card h2{ font-size: 1.1rem; }
+  .challenge-prompt{ font-size: .88rem; padding: 10px 12px; margin-bottom: 14px; }
+  .mc-option, .drag-item{ padding: 10px 12px; font-size: .84rem; }
+  .challenge-actions{ flex-direction: column-reverse; }
+  .challenge-actions .btn{ width: 100%; }
+  .drag-item .ta-label, .drag-item span[style*="opacity:.5"]{ font-size: .8rem; }
+}
+
+@media (max-width: 420px){
+  .joystick-base{ width:96px; height:96px; }
+  .joystick-knob{ width:44px; height:44px; }
+  .touch-action-btn{ width:66px; height:66px; }
+  .coin-pill, .clock-pill{ font-size:.68rem; padding:6px 9px; }
+  .challenge-card, .journal-card{ padding: 14px; }
+  .challenge-card h2, .journal-card h2{ font-size: 1rem; }
+}
+
+/* The Interactive Map mini-game's canvas: keep it comfortably within the
+   card on short screens instead of the fixed 260px intrinsic height. */
+#mapChallengeCanvas{ max-height: 42vh; height: auto; }
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce){
+  *{ animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; }
+}
